@@ -131,42 +131,47 @@ namespace ProjectXAPI.Controllers
             {
                 blObj = new Faculty_BL();
                 int ret = blObj.AddFaculty(PSNo, EmailId, NAME);
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
                 if (ret==1)
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Content = new StringContent(JsonConvert.SerializeObject("Faculty Added Successfully"));
                     response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    return response;
                 }
                 else if (ret == -1)
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Content = new StringContent(JsonConvert.SerializeObject("PSNo Exist"));
                     response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    return response;
                 }
                 else if (ret == -2)
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response  = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Content = new StringContent(JsonConvert.SerializeObject("Email ID Exist"));
                     response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    return response;
                 }
                 else if (ret == -3)
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response  = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Content = new StringContent(JsonConvert.SerializeObject("Faculty Name Exist"));
                     response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    return response;
+                    
                 }
-                var res = new HttpResponseMessage(HttpStatusCode.OK);
-                return res;
+                else if(ret==-99)
+                {
+                    response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Content = new StringContent(JsonConvert.SerializeObject("Exception occured"));
+                    response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                }
+
+                return response;
 
             }
             catch (Exception ex)
             {
                 var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                response.Content = new StringContent(JsonConvert.SerializeObject("Something went wrong"));
+                response.Content = new StringContent(JsonConvert.SerializeObject(ex));
                 return response;
             }
         }

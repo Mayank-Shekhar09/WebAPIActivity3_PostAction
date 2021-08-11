@@ -22,26 +22,31 @@ namespace PROJECTXDAL
 
             sqlCmObj = new SqlCommand("dbo.uspFacultyAdd", sqlObj);
             sqlCmObj.CommandType = CommandType.StoredProcedure;
-            sqlCmObj.Parameters.AddWithValue("@PSNo", PSNo);
+            sqlCmObj.Parameters.AddWithValue("@PSNO", PSNo);
 
-            sqlCmObj.Parameters.AddWithValue("@EmailId", EmailId);
-            sqlCmObj.Parameters.AddWithValue("@Name", NAME);
+            sqlCmObj.Parameters.AddWithValue("@emailId", EmailId);
+            sqlCmObj.Parameters.AddWithValue("@facultyName", NAME);
             var returnParameter = sqlCmObj.Parameters.Add("@ReturnVal", SqlDbType.Int);
             returnParameter.Direction = ParameterDirection.ReturnValue;
 
             try
             {
-               
+
                 sqlObj.Open();
+
+                SqlParameter prmReturn = new SqlParameter();
+                prmReturn.ParameterName = "ReturnValue";
+                prmReturn.Direction = System.Data.ParameterDirection.ReturnValue;
+                prmReturn.SqlDbType = System.Data.SqlDbType.Int;
+                sqlCmObj.Parameters.Add(prmReturn);
                 sqlCmObj.ExecuteNonQuery();
-                var result = returnParameter.Value;
-                Console.WriteLine(result);
-                return (int)result;
+                int returnVal = Convert.ToInt32(prmReturn.Value);
+                return returnVal;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Oops! Something went Wrong !");
-                return -99;
+                //Console.WriteLine("Oops something Wrong");
+                throw ex;
 
             }
             finally
