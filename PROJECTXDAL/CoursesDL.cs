@@ -21,7 +21,7 @@ namespace PROJECTXDAL
         public int AddNewCourse(Course_DTO CourseObj)
         {
 
-            sqlCmObj = new SqlCommand("dbo.usp.AddCourses", sqlObj);
+            sqlCmObj = new SqlCommand("dbo.uspAddCourses", sqlObj);
             sqlCmObj.CommandType = CommandType.StoredProcedure;
             sqlCmObj.Parameters.AddWithValue("@CourseId", CourseObj.CourseId);
             sqlCmObj.Parameters.AddWithValue("@CourseTitle", CourseObj.CourseTitle);
@@ -31,10 +31,15 @@ namespace PROJECTXDAL
             try
             {
                 sqlObj.Open();
-                SqlParameter rm = sqlCmObj.Parameters.Add("RetVal", SqlDbType.Int);
-                rm.Direction = ParameterDirection.ReturnValue;
-                int returnValue = (int)rm.Value;
-                return returnValue;
+
+                SqlParameter prmReturn = new SqlParameter();
+                prmReturn.ParameterName = "ReturnValue";
+                prmReturn.Direction = System.Data.ParameterDirection.ReturnValue;
+                prmReturn.SqlDbType = System.Data.SqlDbType.Int;
+                sqlCmObj.Parameters.Add(prmReturn);
+                sqlCmObj.ExecuteNonQuery();
+                int returnVal = Convert.ToInt32(prmReturn.Value);
+                return returnVal;
             }
             catch (Exception ex)
             {
