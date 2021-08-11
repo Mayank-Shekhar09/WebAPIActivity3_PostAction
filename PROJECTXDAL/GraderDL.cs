@@ -16,24 +16,29 @@ namespace PROJECTXDAL
         SqlCommand sqlCmObj;
         public GraderDL()
         {
-            sqlObj = new SqlConnection(ConfigurationManager.ConnectionStrings["ProjectDataEntities"].ToString());
+            sqlObj = new SqlConnection(ConfigurationManager.ConnectionStrings["DemoEntities1"].ToString());
         }
         public int AddNewGrader(Grader_DTO GraderObj)
         {
 
             sqlCmObj = new SqlCommand("dbo.uspGraderInput", sqlObj);
             sqlCmObj.CommandType = CommandType.StoredProcedure;
-            sqlCmObj.Parameters.AddWithValue("@Marks", GraderObj.Score);
-            sqlCmObj.Parameters.AddWithValue("@PsNo", GraderObj.GId);
-
+            sqlCmObj.Parameters.AddWithValue("@BCFId", GraderObj.BCFId);
+            sqlCmObj.Parameters.AddWithValue("@PSNO", GraderObj.PSNO);
+            sqlCmObj.Parameters.AddWithValue("@Score", GraderObj.Score);
 
             try
             {
                 sqlObj.Open();
-                SqlParameter rm = sqlCmObj.Parameters.Add("RetVal", SqlDbType.Int);
-                rm.Direction = ParameterDirection.ReturnValue;
-                int returnValue = (int)rm.Value;
-                return returnValue;
+
+                SqlParameter prmReturn = new SqlParameter();
+                prmReturn.ParameterName = "ReturnValue";
+                prmReturn.Direction = System.Data.ParameterDirection.ReturnValue;
+                prmReturn.SqlDbType = System.Data.SqlDbType.Int;
+                sqlCmObj.Parameters.Add(prmReturn);
+                sqlCmObj.ExecuteNonQuery();
+                int returnVal = Convert.ToInt32(prmReturn.Value);
+                return returnVal;
             }
             catch (Exception ex)
             {
