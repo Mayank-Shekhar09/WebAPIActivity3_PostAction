@@ -1,0 +1,967 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchId" />
+          </Key>
+          <Property Name="BatchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BatchName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="StudentCount" Type="int" Nullable="false" />
+          <Property Name="ModelId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BatchCourseFacultyMapping">
+          <Key>
+            <PropertyRef Name="BCFId" />
+          </Key>
+          <Property Name="BatchId" Type="int" Nullable="false" />
+          <Property Name="CourseId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FacultyId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BCFId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Demo.dbo.CourseModelMapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CourseModelMapping">
+          <Key>
+            <PropertyRef Name="ModelId" />
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="ModelId" Type="int" Nullable="false" />
+          <Property Name="CourseId" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CourseTitle" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CourseDuration" Type="int" />
+          <Property Name="CourseMode" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeliveryModel">
+          <Key>
+            <PropertyRef Name="ModelId" />
+          </Key>
+          <Property Name="ModelName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ModelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Faculty">
+          <Key>
+            <PropertyRef Name="PSNO" />
+          </Key>
+          <Property Name="PSNO" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FacultyName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Demo.dbo.FacultyCourseMapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="FacultyCourseMapping">
+          <Key>
+            <PropertyRef Name="CourseId" />
+            <PropertyRef Name="PSNO" />
+            <PropertyRef Name="PrimaryFaculty" />
+          </Key>
+          <Property Name="CourseId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PSNO" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PrimaryFaculty" Type="char" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Grader">
+          <Key>
+            <PropertyRef Name="GId" />
+          </Key>
+          <Property Name="BCFId" Type="int" Nullable="false" />
+          <Property Name="PSNO" Type="int" Nullable="false" />
+          <Property Name="Score" Type="float" Nullable="false" />
+          <Property Name="GId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Participants">
+          <Key>
+            <PropertyRef Name="PSNo" />
+          </Key>
+          <Property Name="PSNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParticipantsName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParticipantsEmail" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Demo.dbo.ParticipantsBatchMapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ParticipantsBatchMapping">
+          <Key>
+            <PropertyRef Name="PSNO" />
+            <PropertyRef Name="BatchId" />
+          </Key>
+          <Property Name="PSNO" Type="int" Nullable="false" />
+          <Property Name="BatchId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__CourseMod__Cours__02FC7413">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="CourseModelMapping" Type="Self.CourseModelMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="CourseModelMapping">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FacultyCo__Cours__628FA481">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="FacultyCourseMapping" Type="Self.FacultyCourseMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="FacultyCourseMapping">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FacultyCou__PSNO__6383C8BA">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="FacultyCourseMapping" Type="Self.FacultyCourseMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="PSNO" />
+            </Principal>
+            <Dependent Role="FacultyCourseMapping">
+              <PropertyRef Name="PSNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Grader__PSNO__10566F31">
+          <End Role="Participants" Type="Self.Participants" Multiplicity="1" />
+          <End Role="Grader" Type="Self.Grader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participants">
+              <PropertyRef Name="PSNo" />
+            </Principal>
+            <Dependent Role="Grader">
+              <PropertyRef Name="PSNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Participa__Batch__797309D9">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="ParticipantsBatchMapping" Type="Self.ParticipantsBatchMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchId" />
+            </Principal>
+            <Dependent Role="ParticipantsBatchMapping">
+              <PropertyRef Name="BatchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Participan__PSNo__787EE5A0">
+          <End Role="Participants" Type="Self.Participants" Multiplicity="1" />
+          <End Role="ParticipantsBatchMapping" Type="Self.ParticipantsBatchMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participants">
+              <PropertyRef Name="PSNo" />
+            </Principal>
+            <Dependent Role="ParticipantsBatchMapping">
+              <PropertyRef Name="PSNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batch_BatchCourseFacultyMapping">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchId" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="BatchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batch_DeliveryModel">
+          <End Role="DeliveryModel" Type="Self.DeliveryModel" Multiplicity="1" />
+          <End Role="Batch" Type="Self.Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeliveryModel">
+              <PropertyRef Name="ModelId" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="ModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Course_BatchCourseFacultyMapping">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourseModelMapping_DeliveryModel">
+          <End Role="DeliveryModel" Type="Self.DeliveryModel" Multiplicity="1" />
+          <End Role="CourseModelMapping" Type="Self.CourseModelMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeliveryModel">
+              <PropertyRef Name="ModelId" />
+            </Principal>
+            <Dependent Role="CourseModelMapping">
+              <PropertyRef Name="ModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Faculty_BatchCourseFacultyMapping">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="PSNO" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="FacultyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Grader_BatchCourseFacultyMapping">
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="1" />
+          <End Role="Grader" Type="Self.Grader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="BCFId" />
+            </Principal>
+            <Dependent Role="Grader">
+              <PropertyRef Name="BCFId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ufnBottomFiveScoreByCId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PSNO" Type="int" Nullable="false" />
+                <Property Name="Score" Type="float" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufnGetCourseScoreByFId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="facultyId" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PSNO" Type="int" Nullable="false" />
+                <Property Name="Score" Type="float" Nullable="false" />
+                <Property Name="CourseId" Type="varchar" MaxLength="50" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufnGetFacultyByCId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PSNO" Type="varchar" MaxLength="50" Nullable="false" />
+                <Property Name="PrimaryFaculty" Type="char" MaxLength="10" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufnGetParticipantsByCId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cId" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PSNO" Type="int" Nullable="false" />
+                <Property Name="Score" Type="float" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufnTopFiveScoreByCId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PSNO" Type="int" Nullable="false" />
+                <Property Name="Score" Type="float" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="uspAddCourses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CourseId" Type="varchar" Mode="In" />
+          <Parameter Name="CourseTitle" Type="varchar" Mode="In" />
+          <Parameter Name="CourseDuration" Type="int" Mode="In" />
+          <Parameter Name="CourseMode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspBatchCourseFacultyMapping" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CourseId" Type="varchar" Mode="In" />
+          <Parameter Name="FacultyId" Type="varchar" Mode="In" />
+          <Parameter Name="BatchId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspBatchInput" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BatchName" Type="varchar" Mode="In" />
+          <Parameter Name="StartDate" Type="date" Mode="In" />
+          <Parameter Name="StudentCount" Type="int" Mode="In" />
+          <Parameter Name="ModelId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspDeleteCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspDeleteFaculty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="psno" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspFacultyAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PSNO" Type="varchar" Mode="In" />
+          <Parameter Name="emailId" Type="varchar" Mode="In" />
+          <Parameter Name="facultyName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspGraderInput" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BCFId" Type="int" Mode="In" />
+          <Parameter Name="PSNO" Type="int" Mode="In" />
+          <Parameter Name="Score" Type="float" Mode="In" />
+        </Function>
+        <Function Name="uspMapCourseModel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ModelId" Type="int" Mode="In" />
+          <Parameter Name="CourseId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspMapDelivaryModel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ModelName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspMapFacultyCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CourseId" Type="varchar" Mode="In" />
+          <Parameter Name="PSNO" Type="varchar" Mode="In" />
+          <Parameter Name="PrimaryFaculty" Type="char" Mode="In" />
+        </Function>
+        <Function Name="uspParticipantsInput" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ParticipantsName" Type="varchar" Mode="In" />
+          <Parameter Name="ParticipantsEmail" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspPBMappingInput" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PSNo" Type="int" Mode="In" />
+          <Parameter Name="BatchId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspUpdateCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseId" Type="varchar" Mode="In" />
+          <Parameter Name="courseTitle" Type="varchar" Mode="In" />
+          <Parameter Name="courseDuration" Type="int" Mode="In" />
+          <Parameter Name="courseMode" Type="varchar" Mode="In" />
+          <Parameter Name="curriculum" Type="varbinary" Mode="In" />
+        </Function>
+        <Function Name="uspUpdateFaculties" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="psno" Type="varchar" Mode="In" />
+          <Parameter Name="emailId" Type="varchar" Mode="In" />
+          <Parameter Name="facultyName" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="DemoModelStoreContainer">
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BatchCourseFacultyMapping" EntityType="Self.BatchCourseFacultyMapping" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Courses" EntityType="Self.Courses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeliveryModel" EntityType="Self.DeliveryModel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Faculty" EntityType="Self.Faculty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grader" EntityType="Self.Grader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Participants" EntityType="Self.Participants" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourseModelMapping" EntityType="Self.CourseModelMapping" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CourseModelMapping].[ModelId] AS [ModelId], 
+    [CourseModelMapping].[CourseId] AS [CourseId]
+    FROM [dbo].[CourseModelMapping] AS [CourseModelMapping]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="FacultyCourseMapping" EntityType="Self.FacultyCourseMapping" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [FacultyCourseMapping].[CourseId] AS [CourseId], 
+    [FacultyCourseMapping].[PSNO] AS [PSNO], 
+    [FacultyCourseMapping].[PrimaryFaculty] AS [PrimaryFaculty]
+    FROM [dbo].[FacultyCourseMapping] AS [FacultyCourseMapping]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ParticipantsBatchMapping" EntityType="Self.ParticipantsBatchMapping" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ParticipantsBatchMapping].[PSNO] AS [PSNO], 
+    [ParticipantsBatchMapping].[BatchId] AS [BatchId]
+    FROM [dbo].[ParticipantsBatchMapping] AS [ParticipantsBatchMapping]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__CourseMod__Cours__02FC7413" Association="Self.FK__CourseMod__Cours__02FC7413">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="CourseModelMapping" EntitySet="CourseModelMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FacultyCo__Cours__628FA481" Association="Self.FK__FacultyCo__Cours__628FA481">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="FacultyCourseMapping" EntitySet="FacultyCourseMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FacultyCou__PSNO__6383C8BA" Association="Self.FK__FacultyCou__PSNO__6383C8BA">
+            <End Role="Faculty" EntitySet="Faculty" />
+            <End Role="FacultyCourseMapping" EntitySet="FacultyCourseMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Grader__PSNO__10566F31" Association="Self.FK__Grader__PSNO__10566F31">
+            <End Role="Participants" EntitySet="Participants" />
+            <End Role="Grader" EntitySet="Grader" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Participa__Batch__797309D9" Association="Self.FK__Participa__Batch__797309D9">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="ParticipantsBatchMapping" EntitySet="ParticipantsBatchMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Participan__PSNo__787EE5A0" Association="Self.FK__Participan__PSNo__787EE5A0">
+            <End Role="Participants" EntitySet="Participants" />
+            <End Role="ParticipantsBatchMapping" EntitySet="ParticipantsBatchMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batch_BatchCourseFacultyMapping" Association="Self.FK_Batch_BatchCourseFacultyMapping">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batch_DeliveryModel" Association="Self.FK_Batch_DeliveryModel">
+            <End Role="DeliveryModel" EntitySet="DeliveryModel" />
+            <End Role="Batch" EntitySet="Batch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Course_BatchCourseFacultyMapping" Association="Self.FK_Course_BatchCourseFacultyMapping">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourseModelMapping_DeliveryModel" Association="Self.FK_CourseModelMapping_DeliveryModel">
+            <End Role="DeliveryModel" EntitySet="DeliveryModel" />
+            <End Role="CourseModelMapping" EntitySet="CourseModelMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Faculty_BatchCourseFacultyMapping" Association="Self.FK_Faculty_BatchCourseFacultyMapping">
+            <End Role="Faculty" EntitySet="Faculty" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMapping" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Grader_BatchCourseFacultyMapping" Association="Self.FK_Grader_BatchCourseFacultyMapping">
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMapping" />
+            <End Role="Grader" EntitySet="Grader" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="ufnBottomFiveScoreByCId_Result">
+          <Property Name="PSNO" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ufnGetCourseScoreByFId_Result">
+          <Property Name="PSNO" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
+          <Property Name="CourseId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ufnGetFacultyByCId_Result">
+          <Property Name="PSNO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PrimaryFaculty" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ufnGetParticipantsByCId_Result">
+          <Property Name="PSNO" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ufnTopFiveScoreByCId_Result">
+          <Property Name="PSNO" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchId" />
+          </Key>
+          <Property Name="BatchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BatchName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="StudentCount" Type="Int32" Nullable="false" />
+          <Property Name="ModelId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BatchCourseFacultyMappings" Relationship="Self.FK_Batch_BatchCourseFacultyMapping" FromRole="Batch" ToRole="BatchCourseFacultyMapping" />
+          <NavigationProperty Name="DeliveryModel" Relationship="Self.FK_Batch_DeliveryModel" FromRole="Batch" ToRole="DeliveryModel" />
+          <NavigationProperty Name="Participants" Relationship="Self.ParticipantsBatchMapping" FromRole="Batch" ToRole="Participants" />
+        </EntityType>
+        <EntityType Name="BatchCourseFacultyMapping">
+          <Key>
+            <PropertyRef Name="BCFId" />
+          </Key>
+          <Property Name="BatchId" Type="Int32" Nullable="false" />
+          <Property Name="CourseId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FacultyId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BCFId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Batch" Relationship="Self.FK_Batch_BatchCourseFacultyMapping" FromRole="BatchCourseFacultyMapping" ToRole="Batch" />
+          <NavigationProperty Name="Cours" Relationship="Self.FK_Course_BatchCourseFacultyMapping" FromRole="BatchCourseFacultyMapping" ToRole="Courses" />
+          <NavigationProperty Name="Faculty" Relationship="Self.FK_Faculty_BatchCourseFacultyMapping" FromRole="BatchCourseFacultyMapping" ToRole="Faculty" />
+          <NavigationProperty Name="Graders" Relationship="Self.FK_Grader_BatchCourseFacultyMapping" FromRole="BatchCourseFacultyMapping" ToRole="Grader" />
+        </EntityType>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CourseDuration" Type="Int32" />
+          <Property Name="CourseMode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BatchCourseFacultyMappings" Relationship="Self.FK_Course_BatchCourseFacultyMapping" FromRole="Courses" ToRole="BatchCourseFacultyMapping" />
+          <NavigationProperty Name="FacultyCourseMappings" Relationship="Self.FK__FacultyCo__Cours__628FA481" FromRole="Courses" ToRole="FacultyCourseMapping" />
+          <NavigationProperty Name="DeliveryModels" Relationship="Self.CourseModelMapping" FromRole="Courses" ToRole="DeliveryModel" />
+        </EntityType>
+        <EntityType Name="DeliveryModel">
+          <Key>
+            <PropertyRef Name="ModelId" />
+          </Key>
+          <Property Name="ModelName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ModelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Batches" Relationship="Self.FK_Batch_DeliveryModel" FromRole="DeliveryModel" ToRole="Batch" />
+          <NavigationProperty Name="Courses" Relationship="Self.CourseModelMapping" FromRole="DeliveryModel" ToRole="Courses" />
+        </EntityType>
+        <EntityType Name="Faculty">
+          <Key>
+            <PropertyRef Name="PSNO" />
+          </Key>
+          <Property Name="PSNO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FacultyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BatchCourseFacultyMappings" Relationship="Self.FK_Faculty_BatchCourseFacultyMapping" FromRole="Faculty" ToRole="BatchCourseFacultyMapping" />
+          <NavigationProperty Name="FacultyCourseMappings" Relationship="Self.FK__FacultyCou__PSNO__6383C8BA" FromRole="Faculty" ToRole="FacultyCourseMapping" />
+        </EntityType>
+        <EntityType Name="Grader">
+          <Key>
+            <PropertyRef Name="GId" />
+          </Key>
+          <Property Name="BCFId" Type="Int32" Nullable="false" />
+          <Property Name="PSNO" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
+          <Property Name="GId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="BatchCourseFacultyMapping" Relationship="Self.FK_Grader_BatchCourseFacultyMapping" FromRole="Grader" ToRole="BatchCourseFacultyMapping" />
+          <NavigationProperty Name="Participant" Relationship="Self.FK__Grader__PSNO__10566F31" FromRole="Grader" ToRole="Participants" />
+        </EntityType>
+        <EntityType Name="Participant">
+          <Key>
+            <PropertyRef Name="PSNo" />
+          </Key>
+          <Property Name="PSNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParticipantsName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ParticipantsEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Graders" Relationship="Self.FK__Grader__PSNO__10566F31" FromRole="Participants" ToRole="Grader" />
+          <NavigationProperty Name="Batches" Relationship="Self.ParticipantsBatchMapping" FromRole="Participants" ToRole="Batch" />
+        </EntityType>
+        <EntityType Name="FacultyCourseMapping">
+          <Key>
+            <PropertyRef Name="CourseId" />
+            <PropertyRef Name="PSNO" />
+            <PropertyRef Name="PrimaryFaculty" />
+          </Key>
+          <Property Name="CourseId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PSNO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PrimaryFaculty" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Cours" Relationship="Self.FK__FacultyCo__Cours__628FA481" FromRole="FacultyCourseMapping" ToRole="Courses" />
+          <NavigationProperty Name="Faculty" Relationship="Self.FK__FacultyCou__PSNO__6383C8BA" FromRole="FacultyCourseMapping" ToRole="Faculty" />
+        </EntityType>
+        <Association Name="FK_Batch_BatchCourseFacultyMapping">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchId" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="BatchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batch_DeliveryModel">
+          <End Role="DeliveryModel" Type="Self.DeliveryModel" Multiplicity="1" />
+          <End Role="Batch" Type="Self.Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeliveryModel">
+              <PropertyRef Name="ModelId" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="ModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Course_BatchCourseFacultyMapping">
+          <End Role="Courses" Type="Self.Cours" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Faculty_BatchCourseFacultyMapping">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="PSNO" />
+            </Principal>
+            <Dependent Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="FacultyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Grader_BatchCourseFacultyMapping">
+          <End Role="BatchCourseFacultyMapping" Type="Self.BatchCourseFacultyMapping" Multiplicity="1" />
+          <End Role="Grader" Type="Self.Grader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BatchCourseFacultyMapping">
+              <PropertyRef Name="BCFId" />
+            </Principal>
+            <Dependent Role="Grader">
+              <PropertyRef Name="BCFId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FacultyCo__Cours__628FA481">
+          <End Role="Courses" Type="Self.Cours" Multiplicity="1" />
+          <End Role="FacultyCourseMapping" Type="Self.FacultyCourseMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="FacultyCourseMapping">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FacultyCou__PSNO__6383C8BA">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="FacultyCourseMapping" Type="Self.FacultyCourseMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="PSNO" />
+            </Principal>
+            <Dependent Role="FacultyCourseMapping">
+              <PropertyRef Name="PSNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Grader__PSNO__10566F31">
+          <End Role="Participants" Type="Self.Participant" Multiplicity="1" />
+          <End Role="Grader" Type="Self.Grader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participants">
+              <PropertyRef Name="PSNo" />
+            </Principal>
+            <Dependent Role="Grader">
+              <PropertyRef Name="PSNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CourseModelMapping">
+          <End Role="Courses" Type="Self.Cours" Multiplicity="*" />
+          <End Role="DeliveryModel" Type="Self.DeliveryModel" Multiplicity="*" />
+        </Association>
+        <Association Name="ParticipantsBatchMapping">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="*" />
+          <End Role="Participants" Type="Self.Participant" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="DemoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Batches" EntityType="Self.Batch" />
+          <EntitySet Name="BatchCourseFacultyMappings" EntityType="Self.BatchCourseFacultyMapping" />
+          <EntitySet Name="Courses" EntityType="Self.Cours" />
+          <EntitySet Name="DeliveryModels" EntityType="Self.DeliveryModel" />
+          <EntitySet Name="Faculties" EntityType="Self.Faculty" />
+          <EntitySet Name="Graders" EntityType="Self.Grader" />
+          <EntitySet Name="Participants" EntityType="Self.Participant" />
+          <EntitySet Name="FacultyCourseMappings" EntityType="Self.FacultyCourseMapping" />
+          <AssociationSet Name="FK_Batch_BatchCourseFacultyMapping" Association="Self.FK_Batch_BatchCourseFacultyMapping">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batch_DeliveryModel" Association="Self.FK_Batch_DeliveryModel">
+            <End Role="DeliveryModel" EntitySet="DeliveryModels" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Course_BatchCourseFacultyMapping" Association="Self.FK_Course_BatchCourseFacultyMapping">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Faculty_BatchCourseFacultyMapping" Association="Self.FK_Faculty_BatchCourseFacultyMapping">
+            <End Role="Faculty" EntitySet="Faculties" />
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Grader_BatchCourseFacultyMapping" Association="Self.FK_Grader_BatchCourseFacultyMapping">
+            <End Role="BatchCourseFacultyMapping" EntitySet="BatchCourseFacultyMappings" />
+            <End Role="Grader" EntitySet="Graders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FacultyCo__Cours__628FA481" Association="Self.FK__FacultyCo__Cours__628FA481">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="FacultyCourseMapping" EntitySet="FacultyCourseMappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FacultyCou__PSNO__6383C8BA" Association="Self.FK__FacultyCou__PSNO__6383C8BA">
+            <End Role="Faculty" EntitySet="Faculties" />
+            <End Role="FacultyCourseMapping" EntitySet="FacultyCourseMappings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Grader__PSNO__10566F31" Association="Self.FK__Grader__PSNO__10566F31">
+            <End Role="Participants" EntitySet="Participants" />
+            <End Role="Grader" EntitySet="Graders" />
+          </AssociationSet>
+          <AssociationSet Name="CourseModelMapping" Association="Self.CourseModelMapping">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="DeliveryModel" EntitySet="DeliveryModels" />
+          </AssociationSet>
+          <AssociationSet Name="ParticipantsBatchMapping" Association="Self.ParticipantsBatchMapping">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="Participants" EntitySet="Participants" />
+          </AssociationSet>
+          <FunctionImport Name="ufnBottomFiveScoreByCId" IsComposable="true" ReturnType="Collection(DemoModel.ufnBottomFiveScoreByCId_Result)">
+            <Parameter Name="courseId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufnGetCourseScoreByFId" IsComposable="true" ReturnType="Collection(DemoModel.ufnGetCourseScoreByFId_Result)">
+            <Parameter Name="facultyId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufnGetFacultyByCId" IsComposable="true" ReturnType="Collection(DemoModel.ufnGetFacultyByCId_Result)">
+            <Parameter Name="courseId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufnGetParticipantsByCId" IsComposable="true" ReturnType="Collection(DemoModel.ufnGetParticipantsByCId_Result)">
+            <Parameter Name="cId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufnTopFiveScoreByCId" IsComposable="true" ReturnType="Collection(DemoModel.ufnTopFiveScoreByCId_Result)">
+            <Parameter Name="courseId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspAddCourses">
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+            <Parameter Name="CourseTitle" Mode="In" Type="String" />
+            <Parameter Name="CourseDuration" Mode="In" Type="Int32" />
+            <Parameter Name="CourseMode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspBatchCourseFacultyMapping" ReturnType="Collection(String)">
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+            <Parameter Name="FacultyId" Mode="In" Type="String" />
+            <Parameter Name="BatchId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspBatchInput">
+            <Parameter Name="BatchName" Mode="In" Type="String" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="StudentCount" Mode="In" Type="Int32" />
+            <Parameter Name="ModelId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspDeleteCourse" ReturnType="Collection(String)">
+            <Parameter Name="courseId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspDeleteFaculty" ReturnType="Collection(String)">
+            <Parameter Name="psno" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspFacultyAdd">
+            <Parameter Name="PSNO" Mode="In" Type="String" />
+            <Parameter Name="emailId" Mode="In" Type="String" />
+            <Parameter Name="facultyName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGraderInput">
+            <Parameter Name="BCFId" Mode="In" Type="Int32" />
+            <Parameter Name="PSNO" Mode="In" Type="Int32" />
+            <Parameter Name="Score" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="uspMapCourseModel" ReturnType="Collection(String)">
+            <Parameter Name="ModelId" Mode="In" Type="Int32" />
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspMapDelivaryModel">
+            <Parameter Name="ModelName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspMapFacultyCourse" ReturnType="Collection(String)">
+            <Parameter Name="CourseId" Mode="In" Type="String" />
+            <Parameter Name="PSNO" Mode="In" Type="String" />
+            <Parameter Name="PrimaryFaculty" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspParticipantsInput" ReturnType="Collection(String)">
+            <Parameter Name="ParticipantsName" Mode="In" Type="String" />
+            <Parameter Name="ParticipantsEmail" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspPBMappingInput" ReturnType="Collection(String)">
+            <Parameter Name="PSNo" Mode="In" Type="Int32" />
+            <Parameter Name="BatchId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspUpdateCourse">
+            <Parameter Name="courseId" Mode="In" Type="String" />
+            <Parameter Name="courseTitle" Mode="In" Type="String" />
+            <Parameter Name="courseDuration" Mode="In" Type="Int32" />
+            <Parameter Name="courseMode" Mode="In" Type="String" />
+            <Parameter Name="curriculum" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="uspUpdateFaculties" ReturnType="Collection(String)">
+            <Parameter Name="psno" Mode="In" Type="String" />
+            <Parameter Name="emailId" Mode="In" Type="String" />
+            <Parameter Name="facultyName" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DemoModelStoreContainer" CdmEntityContainer="DemoEntities">
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="DemoModel.Batch">
+              <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="StudentCount" ColumnName="StudentCount" />
+                <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BatchCourseFacultyMappings">
+            <EntityTypeMapping TypeName="DemoModel.BatchCourseFacultyMapping">
+              <MappingFragment StoreEntitySet="BatchCourseFacultyMapping">
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="FacultyId" ColumnName="FacultyId" />
+                <ScalarProperty Name="BCFId" ColumnName="BCFId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="DemoModel.Cours">
+              <MappingFragment StoreEntitySet="Courses">
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="CourseDuration" ColumnName="CourseDuration" />
+                <ScalarProperty Name="CourseMode" ColumnName="CourseMode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliveryModels">
+            <EntityTypeMapping TypeName="DemoModel.DeliveryModel">
+              <MappingFragment StoreEntitySet="DeliveryModel">
+                <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+                <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Faculties">
+            <EntityTypeMapping TypeName="DemoModel.Faculty">
+              <MappingFragment StoreEntitySet="Faculty">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="FacultyName" ColumnName="FacultyName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Graders">
+            <EntityTypeMapping TypeName="DemoModel.Grader">
+              <MappingFragment StoreEntitySet="Grader">
+                <ScalarProperty Name="BCFId" ColumnName="BCFId" />
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="GId" ColumnName="GId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Participants">
+            <EntityTypeMapping TypeName="DemoModel.Participant">
+              <MappingFragment StoreEntitySet="Participants">
+                <ScalarProperty Name="PSNo" ColumnName="PSNo" />
+                <ScalarProperty Name="ParticipantsName" ColumnName="ParticipantsName" />
+                <ScalarProperty Name="ParticipantsEmail" ColumnName="ParticipantsEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FacultyCourseMappings">
+            <EntityTypeMapping TypeName="DemoModel.FacultyCourseMapping">
+              <MappingFragment StoreEntitySet="FacultyCourseMapping">
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="PrimaryFaculty" ColumnName="PrimaryFaculty" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CourseModelMapping" TypeName="DemoModel.CourseModelMapping" StoreEntitySet="CourseModelMapping">
+            <EndProperty Name="Courses">
+              <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+            </EndProperty>
+            <EndProperty Name="DeliveryModel">
+              <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ParticipantsBatchMapping" TypeName="DemoModel.ParticipantsBatchMapping" StoreEntitySet="ParticipantsBatchMapping">
+            <EndProperty Name="Batch">
+              <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+            </EndProperty>
+            <EndProperty Name="Participants">
+              <ScalarProperty Name="PSNo" ColumnName="PSNO" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionName="DemoModel.Store.ufnBottomFiveScoreByCId" FunctionImportName="ufnBottomFiveScoreByCId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DemoModel.ufnBottomFiveScoreByCId_Result">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="DemoModel.Store.ufnGetCourseScoreByFId" FunctionImportName="ufnGetCourseScoreByFId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DemoModel.ufnGetCourseScoreByFId_Result">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="DemoModel.Store.ufnGetFacultyByCId" FunctionImportName="ufnGetFacultyByCId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DemoModel.ufnGetFacultyByCId_Result">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="PrimaryFaculty" ColumnName="PrimaryFaculty" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="DemoModel.Store.ufnGetParticipantsByCId" FunctionImportName="ufnGetParticipantsByCId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DemoModel.ufnGetParticipantsByCId_Result">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="DemoModel.Store.ufnTopFiveScoreByCId" FunctionImportName="ufnTopFiveScoreByCId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DemoModel.ufnTopFiveScoreByCId_Result">
+                <ScalarProperty Name="PSNO" ColumnName="PSNO" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspAddCourses" FunctionName="DemoModel.Store.uspAddCourses" />
+          <FunctionImportMapping FunctionImportName="uspBatchCourseFacultyMapping" FunctionName="DemoModel.Store.uspBatchCourseFacultyMapping" />
+          <FunctionImportMapping FunctionImportName="uspBatchInput" FunctionName="DemoModel.Store.uspBatchInput" />
+          <FunctionImportMapping FunctionImportName="uspDeleteCourse" FunctionName="DemoModel.Store.uspDeleteCourse" />
+          <FunctionImportMapping FunctionImportName="uspDeleteFaculty" FunctionName="DemoModel.Store.uspDeleteFaculty" />
+          <FunctionImportMapping FunctionImportName="uspFacultyAdd" FunctionName="DemoModel.Store.uspFacultyAdd" />
+          <FunctionImportMapping FunctionImportName="uspGraderInput" FunctionName="DemoModel.Store.uspGraderInput" />
+          <FunctionImportMapping FunctionImportName="uspMapCourseModel" FunctionName="DemoModel.Store.uspMapCourseModel" />
+          <FunctionImportMapping FunctionImportName="uspMapDelivaryModel" FunctionName="DemoModel.Store.uspMapDelivaryModel" />
+          <FunctionImportMapping FunctionImportName="uspMapFacultyCourse" FunctionName="DemoModel.Store.uspMapFacultyCourse" />
+          <FunctionImportMapping FunctionImportName="uspParticipantsInput" FunctionName="DemoModel.Store.uspParticipantsInput" />
+          <FunctionImportMapping FunctionImportName="uspPBMappingInput" FunctionName="DemoModel.Store.uspPBMappingInput" />
+          <FunctionImportMapping FunctionImportName="uspUpdateCourse" FunctionName="DemoModel.Store.uspUpdateCourse" />
+          <FunctionImportMapping FunctionImportName="uspUpdateFaculties" FunctionName="DemoModel.Store.uspUpdateFaculties" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
